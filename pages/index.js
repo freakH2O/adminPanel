@@ -28,7 +28,10 @@ export default function Home() {
         <FirestoreCollection path="/medical/" >
       {d => 
       {
-        return d.isLoading ? "Loading" : <div className="flex flex-wrap justify-center content-center h-auto"> {
+        return d.isLoading ? 
+        
+        <div> </div>:
+         <div className="flex flex-wrap justify-center content-center h-auto"> {
         
           <div>
 
@@ -77,11 +80,11 @@ export default function Home() {
               </thead>
               <tbody>
             {d.value.map((doc) => (
-              doc["name"].includes(search)?
+              doc["name"].toLowerCase().includes(search.toLowerCase())?
               <tr>
                 
               <td className="text-2xl p-5 font-extrabold">
-                {doc["name"].includes(search)?doc["name"]:""}
+                {doc["name"]}
               </td>
 
               <td className="overflow-hidden text-2xl pt-5 pb-5 pl-20 w-96 font-extrabold">

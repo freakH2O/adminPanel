@@ -9,7 +9,8 @@ export default function Home() {
   const [nameField,changeName]=useState("");
   const [meaningField,changeMeaning]=useState("");
   const [search,changeSearch]=useState("");
-
+  const [desc,changeDesc]=useState("");
+  
 
   const firebaseConfig = {
     apiKey: "AIzaSyCTMdo9wDst1cz8tLwzbCol3zvUFm7vUhs",
@@ -25,7 +26,7 @@ export default function Home() {
     
   return (
     <FirestoreProvider {...firebaseConfig} firebase={firebase} >
-        <FirestoreCollection path="/medical/" >
+        <FirestoreCollection path="/medical/" orderBy={[{field:"name",type:"asc"}]} >
       {d => 
       {
         return d.isLoading ? 
@@ -37,10 +38,10 @@ export default function Home() {
 
           <div className="grid grid-flow-row">
               <div className="flex flex-wrap grid grid-flow-col gap-4 justify-center content-center m-5">
-            <div className="flex flex-wrap grid grid-flow-row gap-4 justify-center content-center m-5">
-              <input placeholder="Enter Abbreviation" onChange={(e)=>{changeName(e.target.value)}} className="bg-gray-200 font-bold border-black border-2 h-12 w-72 text-xl pl-2"></input>
-              <input placeholder="Enter Meaning" onChange={(e)=>{changeMeaning(e.target.value)}} className="bg-gray-200 font-bold border-black border-2 h-12 w-72 text-xl pl-2"></input> 
-            </div>
+                  <div className="flex flex-wrap grid grid-flow-row gap-4 justify-center content-center m-5">
+                    <input placeholder="Enter Abbreviation" onChange={(e)=>{changeName(e.target.value)}} className="bg-gray-200 font-bold border-black border-2 h-12 w-72 text-xl pl-2"></input>
+                    <input placeholder="Enter Meaning" onChange={(e)=>{changeMeaning(e.target.value)}} className="bg-gray-200 font-bold border-black border-2 h-12 w-72 text-xl pl-2"></input> 
+                  </div>
 
 
             <div className="flex flex-wrap justify-center content-center">
@@ -64,8 +65,29 @@ export default function Home() {
                 } className="bg-yellow-500 pl-24 pr-24 h-24 rounded-md text-2xl font-bold">Add</button>
             </div>
 
-          </div>
+              </div>
               
+                <div className="grid grid-flow-col">
+                    <textarea value={desc} onChange={(e)=>{changeDesc(e.target.value)}} placeholder="Enter New Promotions Description" className="pl-5 pt-5 pr-5 text-xl font-bold mb-5 h-48 bg-gray-300 rounded-md"></textarea>
+                    <button onClick={
+                      ()=>{
+
+                        const db = firebase.firestore();
+                        var info = db.collection("info").doc('info');
+                
+                        info.set({
+                          "info":desc
+                        }).then(()=>{
+                            changeDesc("");
+                            console.log("updated");
+                            Router.replace("/");
+                            });
+                
+                      }
+                    } className="rounded hover:bg-gray-700 hover:text-white bg-blue-500 mb-5 text-xl text-white font-bold" >Update Description</button>
+                
+                </div>
+
               <input onChange={(e)=>{changeSearch(e.target.value)}} placeholder="Enter Search Abbreviation" className="pl-5 text-xl font-bold mb-5 h-24 bg-gray-300 rounded-md"></input>
           
           </div>
